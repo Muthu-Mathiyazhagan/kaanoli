@@ -1,8 +1,26 @@
+const morgan = require('morgan')
 const Joi = require('joi')
 const express = require('express')
 const app = express()
+const log = require('./logger')
+const auth = require('./auth')
+const config = require('config')
 
+
+console.log(config.get('PORT'));
 app.use(express.json())
+console.log('NODE_ENV : ', process.env.NODE_ENV)
+console.log('PORT : ', process.env.PORT)
+console.log('App. get : ', app.get('env'))
+
+if (app.get('env') == 'development' || 'test') {
+  app.use(morgan('dev'))
+}
+app.use(express.static('public'))
+
+app.use(log)
+
+app.use(auth)
 
 let courses = [
   {
@@ -78,7 +96,7 @@ app.delete('/api/courses/:id', (req, res) => {
 })
 
 const PORT = process.env.PORT || 3000
-console.log("PORT : ",PORT);
+// console.log('PORT : ', PORT)
 app.listen(PORT, () => {
   console.log(`App Listening to PORT ${PORT} `)
 })
