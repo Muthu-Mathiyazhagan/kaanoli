@@ -1,6 +1,24 @@
 const express = require('express')
 const router = express.Router()
 const Joi = require('joi')
+const mongoose = require('mongoose')
+const config = require('config')
+
+console.log(`config.get('db_Uri') : ${config.get('db_Uri')}`)
+
+mongoose
+  .connect(config.get('db_Uri'), {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log('Connected to mongoDB')
+    console.log(new Date().toLocaleString('ta-IN'))
+  })
+  .catch(err => {
+    console.error(err)
+    process.exit(1)
+  })
 
 let genres = [
   {
